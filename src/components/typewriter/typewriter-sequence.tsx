@@ -152,21 +152,26 @@ export function TypewriterSequence({
           const nextCharacter = currentPhrase.text[greeting.characterCount];
           delay = variableDelay(GREETING_TYPING_MS, greeting.characterCount);
           if (PUNCTUATION.has(nextCharacter)) delay += 90;
-          advance = () =>
+          advance = () => {
             setGreeting((current) => ({
               ...current,
               characterCount: current.characterCount + 1,
             }));
-        } else {
-          delay = GREETING_HOLD_MS;
-          advance = () => {
-            if (greeting.phraseIndex === phrases.length - 1) {
+
+            if (
+              greeting.phraseIndex === 0 &&
+              greeting.characterCount + 1 === currentPhrase.text.length
+            ) {
               setAbout((current) =>
                 current.started
                   ? current
                   : { ...current, started: true, phase: "typing" },
               );
             }
+          };
+        } else {
+          delay = GREETING_HOLD_MS;
+          advance = () => {
             setGreeting((current) => ({ ...current, phase: "deleting" }));
           };
         }
