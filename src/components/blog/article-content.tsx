@@ -4,10 +4,16 @@ type ArticleContentProps = {
   source: string;
 };
 
+function normalizeLegacyMarkdown(source: string) {
+  return source
+    .replace(/<!--[\s\S]*?-->/g, "")
+    .replace(/<\/?font(?:\s[^>]*)?>/gi, "");
+}
+
 export function ArticleContent({ source }: ArticleContentProps) {
   return (
     <div className="article-content">
-      <MDXRemote source={source} />
+      <MDXRemote source={normalizeLegacyMarkdown(source)} />
     </div>
   );
 }
